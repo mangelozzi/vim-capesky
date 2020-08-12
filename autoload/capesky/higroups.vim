@@ -202,6 +202,7 @@ call capesky#hi('QuickFixLine', 'yellow', '', 'bold')
 call capesky#hi('qfFileName', 'red', '', 'bold')
 call capesky#hi('qfLineNr', 'yellow')
 call capesky#hi('qfSeparator', 'black')
+call capesky#hi('qfError', 'white', 'isoerrorred', 'bold')
 
 "  Search       Last search pattern highlighting (see 'hlsearch').
 "               Also used for similar items that need to stand out.
@@ -799,13 +800,13 @@ call capesky#hi('cssProp', 'nb2')
 " pythonAsync    xxx links to Statement
 " pythonAttribute xxx cleared
 " pythonBuiltin  xxx links to Function
-call capesky#hi('pythonBuiltin',              'pink')
+call capesky#hi('pythonBuiltin', 'pink')
 " pythonComment  xxx links to Comment
 " pythonConditional xxx links to Conditional
 " pythonDecorator xxx links to Define
-call capesky#hi('pythonDecorator',        'pinkl')
+call capesky#hi('pythonDecorator', 'pinkl')
 " pythonDecoratorName xxx links to Function
-call capesky#hi('pythonDecoratorname',    'pink')
+call capesky#hi('pythonDecoratorname','pink')
 " pythonDoctest  xxx links to Special
 " pythonDoctestValue xxx links to Define
 " pythonEscape   xxx links to Special
@@ -818,10 +819,10 @@ call capesky#hi('pythonDecoratorname',    'pink')
 " pythonQuotes   xxx links to String
 call capesky#hi('pythonQuotes', 'stringl')
 " pythonRawString xxx links to String
-call capesky#hi('pythonRawstring',        'number')
+call capesky#hi('pythonRawstring', 'number')
 " pythonRepeat   xxx links to Repeat
 " pythonSpaceError xxx cleared
-call capesky#hi('pythonSpaceerror',       'white', 'isoerrorred')
+call capesky#hi('pythonSpaceerror', 'white', 'isoerrorred')
 " pythonStatement xxx links to Statement
 " pythonString   xxx links to String
 " pythonSync     xxx cleared
@@ -1083,38 +1084,37 @@ call capesky#hi('NERDTreeCWD', 'stringh', 'bghh') " NERDTree root dir
 
 " {{{1 Status line
 "StatusLine = Normal Colour of the active bar, and NC = Non Current
-hi _StatusModified      guifg=#FFFFFF guibg=#FF0000 gui=BOLD
-hi qfError              guifg=#FFFFFF guibg=#FF0000 gui=BOLD
+call capesky#hi('_StatusModified', 'white', 'isoerrorred', 'bold')
 
-hi StatusLine           guifg=#202020 guibg=#00A000 gui=none " WARNING! By default gui set to reverse, need to overide it with none
-hi _StatusFade1         guifg=#00AD00 guibg=#00BB00
-hi _StatusFade2         guifg=#00C800 guibg=#00D600
-hi _StatusFade3         guifg=#00E300 guibg=#00F100
-hi _StatusFile          guifg=#000000 guibg=#00FF00 gui=bold
-hi _StatusSubtle        guifg=#007700 guibg=#00A000
+call capesky#hi('StatusLine',        'statusline_fg',        'statusline_bg', 'none') " WARNING! By default gui set to reverse, need to overide it with none
+call capesky#hi('_StatusFade1',      '_statusfade1_fg',      '_statusfade1_bg')
+call capesky#hi('_StatusFade2',      '_statusfade2_fg',      '_statusfade2_bg')
+call capesky#hi('_StatusFade3',      '_statusfade3_fg',      '_statusfade3_bg')
+call capesky#hi('_StatusFile',       '_statusfile_fg' ,      '_statusfile_bg', 'bold')
+call capesky#hi('_StatusSubtle',     '_statussubtle_fg',     '_statussubtle_bg')
 
-hi StatusLineNC         guifg=#000000 guibg=#A0A0A0 gui=none " Status line None current
-hi _StatusFadeNC1       guifg=#A8A8A8 guibg=#B0B0B0
-hi _StatusFadeNC2       guifg=#b8b8b8 guibg=#b8b8b8
-hi _StatusFadeNC3       guifg=#c0c0c0 guibg=#c8c8c8
-hi _StatusFileNC        guifg=#000000 guibg=#d0d0d0 gui=bold
-hi _StatusSubtleNC      guifg=#707070 guibg=#A0A0A0
+call capesky#hi('StatusLineNC',      'statuslinenc_fg',      'statuslinenc_bg', 'none') " WARNING! By default gui set to reverse, need to overide it with none
+call capesky#hi('_StatusFadeNC1',    '_statusfadenc1_fg',    '_statusfadenc1_bg')
+call capesky#hi('_StatusFadeNC2',    '_statusfadenc2_fg',    '_statusfadenc2_bg')
+call capesky#hi('_StatusFadeNC3',    '_statusfadenc3_fg',    '_statusfadenc3_bg')
+call capesky#hi('_StatusFileNC',     '_statusfilenc_fg',     '_statusfilenc_bg', 'bold')
+call capesky#hi('_StatusSubtleNC',   '_statussubtlenc_fg',   '_statussubtlenc_bg')
 
-hi _qfStatusLine        guifg=#000000 guibg=#C0C000 gui=none " WARNING! By default gui set to reverse, need to overide it with none
-hi _qfStatusFade1       guifg=#C8C800 guibg=#D0D000
-hi _qfStatusFade2       guifg=#D8D800 guibg=#E0E000
-hi _qfStatusFade3       guifg=#E8E800 guibg=#F0F000
-hi _qfStatusFile        guifg=#000000 guibg=#FFFF00 gui=bold
-hi _qfStatusLineNC      guifg=#ffff00 guibg=#777700
-hi _qfStatusSublte      guifg=#007700 guibg=#00A000
+call capesky#hi('_qfStatusLine',     ' _qfstatusline_fg',    '_qfstatusline_bg')
+call capesky#hi('_qfStatusFade1',    '_qfstatusfade1_fg',    '_qfstatusfade1_bg')
+call capesky#hi('_qfStatusFade2',    '_qfstatusfade2_fg',    '_qfstatusfade2_bg')
+call capesky#hi('_qfStatusFade3',    '_qfstatusfade3_fg',    '_qfstatusfade3_bg')
+call capesky#hi('_qfStatusFile',     '_qfstatusfile_fg',     '_qfstatusfile_bg', 'bold')
+call capesky#hi('_qfStatusLineNC',   '_qfstatuslinenc_fg',   '_qfstatuslinenc_bg')
+call capesky#hi('_qfStatusSublte',   '_qfstatussublte_fg',   '_qfstatussublte_bg')
 
-hi _helpStatusLine      guifg=#000000 guibg=#A000E0
-hi _helpStatusFade1     guifg=#A800E4 guibg=#B000E8
-hi _helpStatusFade2     guifg=#B800EA guibg=#C000F0
-hi _helpStatusFade3     guifg=#D000F4 guibg=#E000F8
-hi _helpStatusFile      guifg=#000000 guibg=#FF00FF gui=bold
-hi _helpStatusLineNC    guifg=#ff00ff guibg=#770077
-hi _helpStatusSublte    guifg=#000077 guibg=#0000A0
+call capesky#hi('_helpStatusLine',   '_helpstatusline_fg',   '_helpstatusline_bg')
+call capesky#hi('_helpStatusFade1',  '_helpstatusfade1_fg',  '_helpstatusfade1_bg')
+call capesky#hi('_helpStatusFade2',  '_helpstatusfade2_fg',  '_helpstatusfade2_bg')
+call capesky#hi('_helpStatusFade3',  '_helpstatusfade3_fg',  '_helpstatusfade3_bg')
+call capesky#hi('_helpStatusFile',   '_helpstatusfile_fg',   '_helpstatusfile_bg', 'bold')
+call capesky#hi('_helpStatusLineNC', '_helpstatuslinenc_fg', '_helpstatuslinenc_bg')
+call capesky#hi('_helpStatusSublte', '_helpstatussublte_fg', '_helpstatussublte_bg')
 
 " {{{1 DIFFs (GIT)
 " This might be for vim diff, notice DiffAdd vs DiffAdded
@@ -1182,3 +1182,5 @@ hi LspReferenceText                         guifg=#ff0000 guibg=#888888 gui=NONE
 hi LspReferenceRead                         guifg=#00ff00 guibg=#888888 gui=NONE
 hi LspReferenceWrite                        guifg=#0000ff guibg=#888888 gui=NONE
 
+" {{{1 NERDTree
+hi NERDTreeExecFile guibg=bg
