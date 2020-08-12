@@ -14,16 +14,35 @@ function! capesky#transform#byteclamp(number)
     return capesky#transform#clamp(n, 0, 255)
 endfunction
 
-function! capesky#transform#lightness(hsl, lightness)
-    " lightness from -50 to +50
-    let a:hsl.l = capesky#transform#clamp(a:hsl.l + a:lightness/100.0, 0.0, 1.0)
+function! capesky#transform#hue(hsl, hue)
+    " hue from -50 to +50
+    if a:hue == 0
+        return a:hsl
+    endif
+    let a:hsl.h = (a:hsl.h + a:hue/100.0)
+    if a:hsl.h > 1
+        let a:hsl.h -=1
+    elseif a:hsl.h < 0
+        let a:hsl.h +=1
+    endif
     return a:hsl
 endfunction
 
 function! capesky#transform#saturation(hsl, saturation)
     " saturation from -50 to +50
-    let foo = a:hsl.s
+    if a:saturation == 0
+        return a:hsl
+    endif
     let a:hsl.s = capesky#transform#clamp(a:hsl.s + a:saturation/100.0, 0.0, 1.0)
+    return a:hsl
+endfunction
+
+function! capesky#transform#lightness(hsl, lightness)
+    " lightness from -50 to +50
+    if a:lightness == 0
+        return a:hsl
+    endif
+    let a:hsl.l = capesky#transform#clamp(a:hsl.l + a:lightness/100.0, 0.0, 1.0)
     return a:hsl
 endfunction
 
@@ -37,13 +56,14 @@ function! capesky#transform#contrast(rgb, contrast)
     return x
 endfunction
 
-function! capesky#transform#all(hex, contrast, lightness, saturation)
-    " contrast from -50 to +50
+function! capesky#transform#all(hex, hue, saturation, lightness, contrast)
+    " settings from -50 to +50
     let rgb = capesky#convert#hex2rgb(a:hex)
     let rgb = capesky#transform#contrast(rgb, a:contrast)
     let hsl = capesky#convert#rgb2hsl(rgb)
-    let hsl = capesky#transform#lightness(hsl, a:lightness)
+    let hsl = capesky#transform#hue(hsl, a:hue)
     let hsl = capesky#transform#saturation(hsl, a:saturation)
+    let hsl = capesky#transform#lightness(hsl, a:lightness)
     let rgb = capesky#convert#hsl2rgb(hsl)
     let result = capesky#convert#rgb2hex(rgb)
     return result

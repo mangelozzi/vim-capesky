@@ -10,13 +10,14 @@ function! capesky#init(...)
     if !exists('g:capesky_profiles') || force_defaults
         " These values range between -50 and 50
         let g:capesky_profiles = [
-                    \[-30,-15,-30],
-                    \[-20,-12,-28],
-                    \[-15, -5,-25],
-                    \[- 8, -8,-15],
-                    \[ -5,  0, -8],
-                    \[  0,  0,  0],
-                    \[+10,+10,+10]]
+                    \[ 50, -30, -15, -30],
+                    \[ 40, -28, -12, -20],
+                    \[ 30, -25,  -5, -15],
+                    \[ 20, -15,  -8,  -8],
+                    \[ 10,  -8,   0,  -5],
+                    \[  0,   0,   0,   0],
+                    \[ 10, +10, +10, +10],
+                    \]
     endif
     if !exists('g:capesky_index') || force_defaults
         let g:capesky_index = get(g:, 'capesky_index', 4)
@@ -43,8 +44,6 @@ function! s:getcolorstr(ground, color)
         " Note: This only works for gui not cterm
         return ' gui'.a:ground.'='.a:ground " .' cterm'.a:ground.'='.a:ground
     elseif has_key(g:c, a:color)
-        " normal gui index = 0, normal cterm index = 1
-        " high_contrast gui index = 2, high_contrast cterm index = 3
         let hex = g:c[a:color][0]
         let cterm = g:c[a:color][1]
         return ' gui'.a:ground.'='.hex.' cterm'.a:ground.'='.cterm
@@ -98,69 +97,29 @@ function! capesky#hi(group, fg, ...)
     exe str
 endfun
 
-function! capesky#alterPalette(contrast, lightness, saturation)
+function! capesky#alterPalette(hue, saturation, lightness, contrast)
     let old_p = capesky#palette#getPalette()
     let p = {}
     for [name, values] in items(old_p)
         let old_colour = values[0]
         let cterm      = values[1]
-        let new_color = capesky#transform#all(old_colour, a:contrast, a:lightness, a:saturation)
+        let new_color = capesky#transform#all(old_colour, a:hue, a:saturation, a:lightness, a:contrast)
         let p[name] = [new_color, cterm]
     endfor
     return p
 endfunction
 
-function! capesky#transform#byteclamp(number)
-    " floor works better then round for reverse transforms
-    let n = (type(a:number) == v:t_float) ? float2nr(round(a:number)) : a:number
-    return capesky#transform#clamp(n, 0, 255)
-endfunction
-
-function! capesky#transform#lightness(hsl, lightness)
-    " lightness from -50 to +50
-    let a:hsl.l = capesky#transform#clamp(a:hsl.l + a:lightness/100.0, 0.0, 1.0)
-    return a:hsl
-endfunction
-
-function! capesky#transform#saturation(hsl, saturation)
-    " saturation from -50 to +50
-    let foo = a:hsl.s
-    let a:hsl.s = capesky#transform#clamp(a:hsl.s + a:saturation/100.0, 0.0, 1.0)
-    return a:hsl
-endfunction
-
-function! capesky#transform#contrast(rgb, contrast)
-    " contrast from -50 to +50
-    let f = (80.0 + a:contrast) / (80.0 - a:contrast)
-    let x = {}
-    let x.r = capesky#transform#byteclamp(f * (a:rgb.r - 128) + 128)
-    let x.g = capesky#transform#byteclamp(f * (a:rgb.g - 128) + 128)
-    let x.b = capesky#transform#byteclamp(f * (a:rgb.b - 128) + 128)
-    return x
-endfunction
-
-function! capesky#transform#all(hex, contrast, lightness, saturation)
-    " contrast from -50 to +50
-    let rgb = capesky#convert#hex2rgb(a:hex)
-    let rgb = capesky#transform#contrast(rgb, a:contrast)
-    let hsl = capesky#convert#rgb2hsl(rgb)
-    let hsl = capesky#transform#lightness(hsl, a:lightness)
-    let hsl = capesky#transform#saturation(hsl, a:saturation)
-    let rgb = capesky#convert#hsl2rgb(hsl)
-    let result = capesky#convert#rgb2hex(rgb)
-    return result
-endfunction
-
-function! capesky#applyProfile(contrast, lightness, saturation, ...)
+function! capesky#applyProfile(hue, saturation, lightness, contrast, ...)
     " a:4 = print_idx = optional index
     let profile_str = a:0 > 3 ? " (profile ".a:4.")" : ""
-    let contrast   = capesky#transform#clamp(a:contrast,   -50, +50)
-    let lightness  = capesky#transform#clamp(a:lightness,  -50, +50)
+    let hue        = capesky#transform#clamp(a:hue,        -50, +50)
     let saturation = capesky#transform#clamp(a:saturation, -50, +50)
-    let g:c = capesky#alterPalette(contrast, lightness, saturation)
+    let lightness  = capesky#transform#clamp(a:lightness,  -50, +50)
+    let contrast   = capesky#transform#clamp(a:contrast,   -50, +50)
+    let g:c = capesky#alterPalette(hue, saturation, lightness, contrast)
     runtime autoload/capesky/higroups.vim
     redraw
-    let settings = printf(' contrast: %3d,  lightness: %3d,  saturation: %3d', contrast, lightness, saturation)
+    let settings = printf(' hue %3d,  saturation: %3d,  lightness: %3d,  contrast: %3d', hue, saturation, lightness, contrast)
     echom "Capesky".profile_str.settings
 endfunction
 
@@ -169,10 +128,11 @@ function! capesky#applyProfileByIndex(index)
         echom "Index out of range."
         return
     endif
-    let contrast   = g:capesky_profiles[a:index][0]
-    let lightness  = g:capesky_profiles[a:index][1]
-    let saturation = g:capesky_profiles[a:index][2]
-    call capesky#applyProfile(contrast, lightness, saturation, a:index)
+    let hue        = g:capesky_profiles[a:index][0]
+    let saturation = g:capesky_profiles[a:index][1]
+    let lightness  = g:capesky_profiles[a:index][2]
+    let contrast   = g:capesky_profiles[a:index][3]
+    call capesky#applyProfile(hue, saturation, lightness, contrast, a:index)
 endfunction
 
 function! capesky#applyCurrentProfile()
@@ -204,12 +164,12 @@ function! capesky#handleCommand(...)
     if a:0 == 1
         " Single arg, called as index
         call capesky#applyProfileByIndex(a:1)
-    elseif a:0 == 3
-        " Contrast Lightness Saturation Passed in
-        call capesky#applyProfile(a:1, a:2, a:3)
+    elseif a:0 == 4
+        " Hue, Saturation, Lightness, Contrast Passed in
+        call capesky#applyProfile(a:1, a:2, a:3, a:4)
     else
         echohl error
-        echom "Incorrect usage (try with 1 or 3 args): { PROFILE_INDEX | CONTRAST LIGHTNESS SATURATION }"
+        echom "Incorrect usage (try with 1 or 4 args): { PROFILE_INDEX | HUE SATURATION LIGHTNESS CONTRAST }"
         echohl None
     endif
 endfunction
