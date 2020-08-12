@@ -1,6 +1,40 @@
 let s:term_colors = ['black', 'blue', 'brown', 'cyan', 'darkblue', 'darkcyan', 'darkgray', 'darkgreen', 'darkgrey', 'darkmagenta', 'darkred', 'darkyellow', 'gray', 'green', 'grey', 'lightblue', 'lightcyan', 'lightgray', 'lightgreen', 'lightgrey', 'lightmagenta', 'lightred', 'lightyellow', 'magenta', 'red', 'white', 'yellow']
-let g:c = capesky#palette#getPalette()
 
+function! capesky#init(...)
+    " Optional arg = force init
+    let force_defaults = (a:0 > 0) && (a:1)
+    echom force_defaults
+    if exists('g:capesky_loaded') && !force_defaults
+        return
+    endif
+    if !exists('g:capesky_profiles') || force_defaults
+        " These values range between -50 and 50
+        let g:capesky_profiles = [
+                    \[-30,-15,-30],
+                    \[-20,-12,-28],
+                    \[-15, -5,-25],
+                    \[- 8, -8,-15],
+                    \[ -5,  0, -8],
+                    \[  0,  0,  0],
+                    \[+10,+10,+10]]
+    endif
+    if !exists('g:capesky_index') || force_defaults
+        let g:capesky_index = get(g:, 'capesky_index', 4)
+        let g:capesky_index = capesky#transform#clamp(
+                    \g:capesky_index,
+                    \0,
+                    \len(g:capesky_profiles) - 1)
+    endif
+
+    command! CapeskyPrev :call capesky#selectProfile(-1)
+    command! CapeskyNext :call capesky#selectProfile(1)
+
+    nnoremap <silent> <M-1> :CapeskyPrev<CR>
+    nnoremap <silent> <M-2> :CapeskyNext<CR>
+    let g:capesky_loaded = 1
+endfunction
+    call capesky#init(1)
+    call capesky#applyCurrentProfile()
 
 function! s:getcolorstr(ground, color)
     " ground = 'fg' or 'bg'
@@ -12,10 +46,9 @@ function! s:getcolorstr(ground, color)
     elseif has_key(g:c, a:color)
         " normal gui index = 0, normal cterm index = 1
         " high_contrast gui index = 2, high_contrast cterm index = 3
-        let hexc = g:c[a:color][0]
+        let hex = g:c[a:color][0]
         let cterm = g:c[a:color][1]
-        let hexc = capesky#transform#all(hexc, g:capesky_contrast, g:capesky_lightness, g:capesky_saturation)
-        return ' gui'.a:ground.'='.hexc.' cterm'.a:ground.'='.cterm
+        return ' gui'.a:ground.'='.hex.' cterm'.a:ground.'='.cterm
     else
         if type(a:color) == v:t_string
             if a:color[0] == "#"
@@ -66,38 +99,99 @@ function! capesky#hi(group, fg, ...)
     exe str
 endfun
 
-function! capesky#setColors(contrast, lightness, saturation)
-    let g:capesky_contrast   = capesky#transform#clamp(a:contrast,   -50, +50)
-    let g:capesky_lightness  = capesky#transform#clamp(a:lightness,  -50, +50)
-    let g:capesky_saturation = capesky#transform#clamp(a:saturation, -50, +50)
-    color capesky
+function! capesky#alterPalette(contrast, lightness, saturation)
+    let old_p = capesky#palette#getPalette()
+    let p = {}
+    for [name, values] in items(old_p)
+        let old_colour = values[0]
+        let cterm      = values[1]
+        let new_color = capesky#transform#all(old_colour, a:contrast, a:lightness, a:saturation)
+        let p[name] = [new_color, cterm]
+    endfor
+    return p
 endfunction
 
-function! capesky#changeindex(delta)
-    let old_index = g:capesky_index
-    let g:capesky_index += a:delta
-    if g:capesky_index < 0
-        let g:capesky_index = 0
-    elseif g:capesky_index > len(g:capesky_set) - 1
-        let g:capesky_index = len(g:capesky_set) - 1
-    endif
-    if old_index == g:capesky_index
-        echom "Hit end"
+function! capesky#transform#byteclamp(number)
+    " floor works better then round for reverse transforms
+    let n = (type(a:number) == v:t_float) ? float2nr(round(a:number)) : a:number
+    return capesky#transform#clamp(n, 0, 255)
+endfunction
+
+function! capesky#transform#lightness(hsl, lightness)
+    " lightness from -50 to +50
+    let a:hsl.l = capesky#transform#clamp(a:hsl.l + a:lightness/100.0, 0.0, 1.0)
+    return a:hsl
+endfunction
+
+function! capesky#transform#saturation(hsl, saturation)
+    " saturation from -50 to +50
+    let foo = a:hsl.s
+    let a:hsl.s = capesky#transform#clamp(a:hsl.s + a:saturation/100.0, 0.0, 1.0)
+    return a:hsl
+endfunction
+
+function! capesky#transform#contrast(rgb, contrast)
+    " contrast from -50 to +50
+    let f = (80.0 + a:contrast) / (80.0 - a:contrast)
+    let x = {}
+    let x.r = capesky#transform#byteclamp(f * (a:rgb.r - 128) + 128)
+    let x.g = capesky#transform#byteclamp(f * (a:rgb.g - 128) + 128)
+    let x.b = capesky#transform#byteclamp(f * (a:rgb.b - 128) + 128)
+    return x
+endfunction
+
+function! capesky#transform#all(hex, contrast, lightness, saturation)
+    " contrast from -50 to +50
+    let rgb = capesky#convert#hex2rgb(a:hex)
+    let rgb = capesky#transform#contrast(rgb, a:contrast)
+    let hsl = capesky#convert#rgb2hsl(rgb)
+    let hsl = capesky#transform#lightness(hsl, a:lightness)
+    let hsl = capesky#transform#saturation(hsl, a:saturation)
+    let rgb = capesky#convert#hsl2rgb(hsl)
+    let result = capesky#convert#rgb2hex(rgb)
+    return result
+endfunction
+
+function! capesky#applyProfileByIndex(index)
+    if (a:index < 0) || (a:index > len(g:capesky_profiles) - 1)
+        echom "Index out of range."
         return
     endif
-    let contrast   = g:capesky_set[g:capesky_index][0]
-    let lightness  = g:capesky_set[g:capesky_index][1]
-    let saturation = g:capesky_set[g:capesky_index][2]
-    call capesky#setColors(contrast, lightness, saturation)
+    let contrast   = g:capesky_profiles[a:index][0]
+    let lightness  = g:capesky_profiles[a:index][1]
+    let saturation = g:capesky_profiles[a:index][2]
+    let contrast   = capesky#transform#clamp(contrast,   -50, +50)
+    let lightness  = capesky#transform#clamp(lightness,  -50, +50)
+    let saturation = capesky#transform#clamp(saturation, -50, +50)
+    let g:c = capesky#alterPalette(contrast, lightness, saturation)
+
+    runtime autoload/capesky/higroups.vim
+    redraw
+    echom printf('Capesky profile %d - contrast: %3d,  lightness: %3d,  saturation: %3d',  a:index, contrast, lightness, saturation)
 endfunction
 
-function! capesky#init()
-    let g:capesky_index = get(g:, 'capesky_index', 2)
-    if !exists('g:capesky_set')
-        " These values range between -50 and 50
-        let g:capesky_set = [[-30,-15,-30], [-20,-12,-20], [-15,-10,-20], [-08,-08,-15], [0,0,0], [10,10,10]]
-    endif
-    let g:capesky_contrast   = g:capesky_set[g:capesky_index][0]
-    let g:capesky_lightness  = g:capesky_set[g:capesky_index][1]
-    let g:capesky_saturation = g:capesky_set[g:capesky_index][2]
+function! capesky#applyCurrentProfile()
+    call capesky#applyProfileByIndex(g:capesky_index)
 endfunction
+
+function! capesky#selectProfile(delta)
+    " delta = change from current profile
+    "         -1 = Previous
+    "          0 = Current index
+    "          1 = Next
+    if a:delta != 0
+        let old_index = g:capesky_index
+        let g:capesky_index += a:delta
+        if g:capesky_index < 0
+            let g:capesky_index = 0
+        elseif g:capesky_index > len(g:capesky_profiles) - 1
+            let g:capesky_index = len(g:capesky_profiles) - 1
+        endif
+        if old_index == g:capesky_index
+            echom "Hit end"
+            return
+        endif
+    endif
+    call capesky#applyCurrentProfile()
+endfunction
+
