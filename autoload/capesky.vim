@@ -26,15 +26,14 @@ function! capesky#init(...)
                     \len(g:capesky_profiles) - 1)
     endif
 
-    command! CapeskyPrev :call capesky#selectProfile(-1)
-    command! CapeskyNext :call capesky#selectProfile(1)
+    command! CapeskyPrev  call capesky#applyProfileByIndexDelta(-1)
+    command! CapeskyNext  call capesky#applyProfileByIndexDelta(1)
+    command! -nargs=* Capesky call capesky#handleCommand(<f-args>)
 
     nnoremap <silent> <M-1> :CapeskyPrev<CR>
     nnoremap <silent> <M-2> :CapeskyNext<CR>
     let g:capesky_loaded = 1
 endfunction
-    call capesky#init(1)
-    call capesky#applyCurrentProfile()
 
 function! s:getcolorstr(ground, color)
     " ground = 'fg' or 'bg'
@@ -152,6 +151,19 @@ function! capesky#transform#all(hex, contrast, lightness, saturation)
     return result
 endfunction
 
+function! capesky#applyProfile(contrast, lightness, saturation, ...)
+    " a:4 = print_idx = optional index
+    let profile_str = a:0 > 3 ? " (profile ".a:4.")" : ""
+    let contrast   = capesky#transform#clamp(a:contrast,   -50, +50)
+    let lightness  = capesky#transform#clamp(a:lightness,  -50, +50)
+    let saturation = capesky#transform#clamp(a:saturation, -50, +50)
+    let g:c = capesky#alterPalette(contrast, lightness, saturation)
+    runtime autoload/capesky/higroups.vim
+    redraw
+    let settings = printf(' contrast: %3d,  lightness: %3d,  saturation: %3d', contrast, lightness, saturation)
+    echom "Capesky".profile_str.settings
+endfunction
+
 function! capesky#applyProfileByIndex(index)
     if (a:index < 0) || (a:index > len(g:capesky_profiles) - 1)
         echom "Index out of range."
@@ -160,21 +172,14 @@ function! capesky#applyProfileByIndex(index)
     let contrast   = g:capesky_profiles[a:index][0]
     let lightness  = g:capesky_profiles[a:index][1]
     let saturation = g:capesky_profiles[a:index][2]
-    let contrast   = capesky#transform#clamp(contrast,   -50, +50)
-    let lightness  = capesky#transform#clamp(lightness,  -50, +50)
-    let saturation = capesky#transform#clamp(saturation, -50, +50)
-    let g:c = capesky#alterPalette(contrast, lightness, saturation)
-
-    runtime autoload/capesky/higroups.vim
-    redraw
-    echom printf('Capesky profile %d - contrast: %3d,  lightness: %3d,  saturation: %3d',  a:index, contrast, lightness, saturation)
+    call capesky#applyProfile(contrast, lightness, saturation, a:index)
 endfunction
 
 function! capesky#applyCurrentProfile()
     call capesky#applyProfileByIndex(g:capesky_index)
 endfunction
 
-function! capesky#selectProfile(delta)
+function! capesky#applyProfileByIndexDelta(delta)
     " delta = change from current profile
     "         -1 = Previous
     "          0 = Current index
@@ -195,3 +200,16 @@ function! capesky#selectProfile(delta)
     call capesky#applyCurrentProfile()
 endfunction
 
+function! capesky#handleCommand(...)
+    if a:0 == 1
+        " Single arg, called as index
+        call capesky#applyProfileByIndex(a:1)
+    elseif a:0 == 3
+        " Contrast Lightness Saturation Passed in
+        call capesky#applyProfile(a:1, a:2, a:3)
+    else
+        echohl error
+        echom "Incorrect usage (try with 1 or 3 args): { PROFILE_INDEX | CONTRAST LIGHTNESS SATURATION }"
+        echohl None
+    endif
+endfunction
