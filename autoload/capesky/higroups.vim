@@ -120,7 +120,8 @@ call capesky#hi('EndOfBuffer', '', 'endofbuffer')
 call capesky#hi('ErrorMsg', 'black', 'isoerrorred')
 
 "  VertSplit    the column separating vertically split windows
-call capesky#hi('VertSplit', 'vertsplit')
+" The foreground is a vertical line, by default has reverse on
+call capesky#hi('VertSplit', 'vertsplit_fg', 'vertsplit_bg', 'none')
 
 "  Folded       line used for closed folds
 call capesky#hi('Folded', 'purpleh', 'purple_bg')

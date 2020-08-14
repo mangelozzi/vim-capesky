@@ -1,5 +1,7 @@
-" Helper function for hsl2rgb
-function! s:hue2rgb(p, q, t)
+" Based on Garry Tan javascript algorithm that was posted on his now archived blog.
+
+" Helper function for hsl -> rgb conversion
+function! s:hueToRgb(p, q, t)
     let t = a:t
     let t += t < 0 ? 1 : 0
     let t -= t > 1 ? 1 : 0
@@ -17,7 +19,7 @@ endfunction
 "    adapted from http://en.wikipedia.org/wiki/HSL_color_space.
 "    Assumes h, s, and l are contained in the set [0, 1] and
 "    returns r, g, and b in the set [0, 255].
-function! capesky#convert#hsl2rgb(hsl)
+function! capesky#t_hsl#toRgb(hsl)
     if (a:hsl.s == 0)
         let a:hsl.r = float2nr(a:hsl.l * 255)
         let a:hsl.g = float2nr(a:hsl.l * 255)
@@ -25,9 +27,9 @@ function! capesky#convert#hsl2rgb(hsl)
     else
         let q = a:hsl.l < 0.5 ? a:hsl.l * (1 + a:hsl.s) : a:hsl.l + a:hsl.s - a:hsl.l * a:hsl.s
         let p = 2 * a:hsl.l - q
-        let a:hsl.r = float2nr(s:hue2rgb(p, q, a:hsl.h + 1.0/3) * 255)
-        let a:hsl.g = float2nr(s:hue2rgb(p, q, a:hsl.h) * 255)
-        let a:hsl.b = float2nr(s:hue2rgb(p, q, a:hsl.h - 1.0/3) * 255)
+        let a:hsl.r = float2nr(s:hueToRgb(p, q, a:hsl.h + 1.0/3) * 255)
+        let a:hsl.g = float2nr(s:hueToRgb(p, q, a:hsl.h) * 255)
+        let a:hsl.b = float2nr(s:hueToRgb(p, q, a:hsl.h - 1.0/3) * 255)
     endif
     return a:hsl
 endfunction
@@ -36,7 +38,7 @@ endfunction
 "    adapted from http://en.wikipedia.org/wiki/HSL_color_space.
 "    Assumes r, g, and b are contained in the set [0, 255] and
 "    returns h, s, and l in the set [0, 1].
-function! capesky#convert#rgb2hsl(rgb)
+function! capesky#t_hsl#fromRgb(rgb)
     let x={}
     let x.r = a:rgb.r / 255.0
     let x.g = a:rgb.g / 255.0
@@ -63,18 +65,3 @@ function! capesky#convert#rgb2hsl(rgb)
     endif
     return x
 endfunction
-
-" convert hex string to rgb
-function! capesky#convert#hex2rgb(hex)
-    let rgb = {}
-    let rgb.r = str2nr(a:hex[1:2], 16)
-    let rgb.g = str2nr(a:hex[3:4], 16)
-    let rgb.b = str2nr(a:hex[5:6], 16)
-    return rgb
-endfunction
-
-" convert rgb to hex string
-function! capesky#convert#rgb2hex(rgb)
-    return printf('#%02x%02x%02x', a:rgb.r, a:rgb.g, a:rgb.b)
-endfunction
-

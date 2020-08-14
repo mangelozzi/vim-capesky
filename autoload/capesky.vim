@@ -10,18 +10,18 @@ function! capesky#init(...)
     if !exists('g:capesky_profiles') || force_defaults
         " These values range between -50 and 50
         let g:capesky_profiles = [
-                    \[ 50, -30, -15, -30],
-                    \[ 40, -28, -12, -20],
-                    \[ 30, -25,  -5, -15],
-                    \[ 20, -15,  -8,  -8],
-                    \[ 10,  -8,   0,  -5],
+                    \[  5, -30, -15, -30],
+                    \[  5, -28, -12, -20],
+                    \[  5, -25,  -5, -15],
+                    \[  5, -15,  -8,  -8],
+                    \[  5,  -8,   0,  -5],
                     \[  0,   0,   0,   0],
                     \[ 10, +10, +10, +10],
                     \]
     endif
     if !exists('g:capesky_index') || force_defaults
         let g:capesky_index = get(g:, 'capesky_index', 4)
-        let g:capesky_index = capesky#transform#clamp(
+        let g:capesky_index = capesky#utils#clamp(
                     \g:capesky_index,
                     \0,
                     \len(g:capesky_profiles) - 1)
@@ -31,8 +31,8 @@ function! capesky#init(...)
     command! CapeskyNext  call capesky#applyProfileByIndexDelta(1)
     command! -nargs=* Capesky call capesky#handleCommand(<f-args>)
 
-    nnoremap <silent> <M-1> :CapeskyPrev<CR>
-    nnoremap <silent> <M-2> :CapeskyNext<CR>
+    nnoremap <silent> <M-1> :<C-U>CapeskyPrev<CR>
+    nnoremap <silent> <M-2> :<C-U>CapeskyNext<CR>
     let g:capesky_loaded = 1
 endfunction
 
@@ -44,9 +44,9 @@ function! s:getcolorstr(ground, color)
         " Note: This only works for gui not cterm
         return ' gui'.a:ground.'='.a:ground " .' cterm'.a:ground.'='.a:ground
     elseif has_key(g:c, a:color)
-        let hex = g:c[a:color][0]
-        let cterm = g:c[a:color][1]
-        return ' gui'.a:ground.'='.hex.' cterm'.a:ground.'='.cterm
+        let hex   = g:c[a:color][0]
+        let xterm = g:c[a:color][1]
+        return ' gui'.a:ground.'='.hex.' cterm'.a:ground.'='.xterm
     else
         if type(a:color) == v:t_string
             if a:color[0] == "#"
@@ -100,11 +100,10 @@ endfun
 function! capesky#alterPalette(hue, saturation, lightness, contrast)
     let old_p = capesky#palette#getPalette()
     let p = {}
-    for [name, values] in items(old_p)
-        let old_colour = values[0]
-        let cterm      = values[1]
-        let new_color = capesky#transform#all(old_colour, a:hue, a:saturation, a:lightness, a:contrast)
-        let p[name] = [new_color, cterm]
+    for [name, old_hex] in items(old_p)
+        let hex = capesky#transform#all(old_hex, a:hue, a:saturation, a:lightness, a:contrast)
+        let xterm = capesky#utils#hexToXterm(hex)
+        let p[name] = [hex, xterm]
     endfor
     return p
 endfunction
@@ -112,10 +111,10 @@ endfunction
 function! capesky#applyProfile(hue, saturation, lightness, contrast, ...)
     " a:4 = print_idx = optional index
     let profile_str = a:0 > 3 ? " (profile ".a:4.")" : ""
-    let hue        = capesky#transform#clamp(a:hue,        -50, +50)
-    let saturation = capesky#transform#clamp(a:saturation, -50, +50)
-    let lightness  = capesky#transform#clamp(a:lightness,  -50, +50)
-    let contrast   = capesky#transform#clamp(a:contrast,   -50, +50)
+    let hue        = capesky#utils#clamp(a:hue,        -50, +50)
+    let saturation = capesky#utils#clamp(a:saturation, -50, +50)
+    let lightness  = capesky#utils#clamp(a:lightness,  -50, +50)
+    let contrast   = capesky#utils#clamp(a:contrast,   -50, +50)
     let g:c = capesky#alterPalette(hue, saturation, lightness, contrast)
     runtime autoload/capesky/higroups.vim
     redraw
