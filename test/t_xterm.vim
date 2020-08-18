@@ -1,5 +1,5 @@
 " Hex colour codes with matching closest terminal color
-function! s:xterm_fromRgb_test()
+function! s:xterm_fromRgbSlow_test()
     let tests = [
                 \['#000000', 16],
                 \['#5f8700', 64],
@@ -13,18 +13,28 @@ function! s:xterm_fromRgb_test()
                 \['#171717', 234],
                 \['#739beb', 111],
                 \]
-
     for test in tests
         let correct_hex   = test[0]
         let correct_xterm = test[1]
         let rgb = capesky#t_hex#toRgb(correct_hex)
-        let test_xterm = capesky#t_xterm#fromRgb(rgb)
+        let test_xterm = capesky#t_xterm#fromRgbSlow(rgb) " change to capesky#t_xterm#fromRgbSlow(rgb) to test the other function
         let result = (correct_xterm == test_xterm) ? 'OK' : 'FAIL'
         echom printf("t_xterm#fromRgb('%s') -> %3d == %3d ? %s", correct_hex, correct_xterm, test_xterm, result)
-        if result == 'FAIL'
-            echom correct_hex
-        endif
     endfor
+endfunction
+call s:xterm_fromRgbSlow_test()
+
+function! s:xterm_fromRgb_test()
+    for i in range(0, 255)
+        let l = i
+        let rgb = {'r':l, 'g':l, 'b':l}
+        let correct_xterm = capesky#t_xterm#fromRgb_slow(rgb)
+        let test_xterm = capesky#t_xterm#fromRgb(rgb)
+        let correct_hex = printf('#%02x%02x%02x', l, l, l)
+        let result = (correct_xterm == test_xterm) ? 'OK' : 'FAIL'
+        echom printf("%5d. t_xterm#fromRgb('%s') -> %3d == %3d ? %s", i, correct_hex, correct_xterm, test_xterm, result)
+    endfor
+    " redir END
     echom
 endfunction
 call s:xterm_fromRgb_test()
@@ -54,4 +64,5 @@ function! s:t_xterm_toRgb_test()
     endfor
     echom
 endfunction
-" call s:t_xterm_toRgb_test()
+call s:t_xterm_toRgb_test()
+

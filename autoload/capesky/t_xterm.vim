@@ -25,46 +25,35 @@ let s:c = s:getXterm2RgbDict()
 
 " Given two RGB ojects, gives the difference between the two
 function! s:colorDiff(rgb1, rgb2)
-    " The human eye is most sensitive to green light, less to red and least to blue.
-    let diff_r = 33 * abs(a:rgb1.r - a:rgb2.r)
-    let diff_g = 50 * abs(a:rgb1.g - a:rgb2.g)
-    let diff_b = 16 * abs(a:rgb1.b - a:rgb2.b)
-    let diff = diff_r + diff_g + diff_b
-    return diff
-endfunction
-
-" Given two RGB ojects, and one is gray, gives the manhattan difference.
-function! s:grayDiff(rgb1, rgb2)
     let diff_r = abs(a:rgb1.r - a:rgb2.r)
     let diff_g = abs(a:rgb1.g - a:rgb2.g)
     let diff_b = abs(a:rgb1.b - a:rgb2.b)
-    let diff = diff_r + diff_g + diff_b
-    return diff
+    let is_gray_diff = (a:rgb1.r == a:rgb1.b) && (a:rgb1.b == a:rgb1.g) && (a:rgb2.r == a:rgb2.b) && (a:rgb2.b == a:rgb2.g)
+    if !is_gray_diff
+        " The human eye is most sensitive to green light, less to red and least to blue.
+        " In the ratio of about 50 / 33 / 16
+        return 16*diff_r + 33*diff_g + 50*diff_b
+    else
+        " Slightly favour pure gray colors if is gray
+        return 32*diff_r + 32*diff_g + 32*diff_b
+    endif
 endfunction
-let s:rgb_black = capesky#t_hex#toRgb('#000000')
-let s:rgb_white = capesky#t_hex#toRgb('#ffffff')
-let s:max_error = s:colorDiff(s:rgb_black, s:rgb_white)
+let s:max_error = s:colorDiff({'r':0, 'g':0, 'b':0}, {'r':0xff, 'g':0xff, 'b':0xff})
 
 " Converts RGB object -> xterm 255 color number
 "     Does not use colors 0-15 because they are none standard (customised)
-function! capesky#t_xterm#fromRgb(rgb)
-    let is_gray = (a:rgb.r == a:rgb.b) && (a:rgb.b == a:rgb.g)
+"     This function is too slow to use to be used to convert all colours on
+"     the fly, but used to check capesky#t_xterm#fromRgb (faster version same
+"     output)
+function! capesky#t_xterm#fromRgbSlow(rgb)
     let best = s:max_error
     let e = 0 " Init for scope
     for i in range(16, 255)
         let rgb_check = s:c[i]
-        if is_gray
-            let e = s:grayDiff(a:rgb, rgb_check)
-        else
-            let e = s:colorDiff(a:rgb, rgb_check)
-        endif
+        let e = s:colorDiff(a:rgb, rgb_check)
         if e <= best
             let best = e
             let n = i
-            if e <= 8
-                " I think won't find a closer match
-                return n
-            endif
         endif
     endfor
     return n
@@ -75,3 +64,46 @@ function! capesky#t_xterm#toRgb(n)
     return rgb
 endfunction
 
+" Colors step at these points
+" let s:steps =    [ 0,  95, 135, 175, 215, 255]
+" Thresholds (dec) [   48, 115, 155, 195, 235  ]
+" Thresholds (hex) [   30,  73,  9b,  c3,  eb  ]
+function! s:getClosestColorComponent(n)
+    if a:n >= 0x73
+        return (a:n - 35) / 0x28
+    elseif a:n < 0x30
+        return 0
+    else
+        return 1
+    endif
+endfunction
+function! s:getClosestXtermColor16To231(rgb)
+    let r = s:getClosestColorComponent(a:rgb.r)
+    let g = s:getClosestColorComponent(a:rgb.g)
+    let b = s:getClosestColorComponent(a:rgb.b)
+    return 16 + 0x24*r + 6*g + b
+endfunction
+
+function! s:getClosestXtermGray232To255(rgb)
+    let l = a:rgb.r
+    if l <= 0x03
+        return 16 " black
+    elseif l >= 0xf7
+        return 231 "white
+    elseif l>= 0xe9
+        return 255 "darkest gray
+    else
+        " Some gray inbetween
+        return (l - 3)/10 + 232
+    endif
+endfunction
+
+" Fast implentation of of getting xterm colour from RGB object
+function! capesky#t_xterm#fromRgb(rgb)
+    let color_n = s:getClosestXtermColor16To231(a:rgb)
+    let gray_n  = s:getClosestXtermGray232To255(a:rgb)
+    let color_rgb = s:c[color_n]
+    let gray_rgb  = s:c[gray_n]
+    let n = (s:colorDiff(a:rgb, color_rgb) < s:colorDiff(a:rgb, gray_rgb)) ? color_n : gray_n
+    return n
+endfunction

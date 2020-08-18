@@ -36,7 +36,7 @@ function! capesky#init(...)
     let g:capesky_loaded = 1
 endfunction
 
-function! s:getcolorstr(ground, color)
+function! s:getColorStr(ground, color)
     " ground = 'fg' or 'bg'
     " color = 'red' or '#123456' or 123 or ['#123456',123]
     if (tolower(a:ground) == tolower(a:color)) || (tolower(a:color) == 'none')
@@ -75,7 +75,7 @@ function! capesky#hi(group, fg, ...)
 
     " forground
     if strlen(a:fg)
-        let str .= s:getcolorstr('fg', a:fg)
+        let str .= s:getColorStr('fg', a:fg)
     endif
 
     " background
@@ -83,7 +83,7 @@ function! capesky#hi(group, fg, ...)
     if a:0 >= 1
         let bg = a:1
         if strlen(bg)
-            let str .= s:getcolorstr('bg', bg)
+            let str .= s:getColorStr('bg', bg)
         endif
     endif
 
