@@ -10,17 +10,18 @@ function! capesky#init(...)
     if !exists('g:capesky_profiles') || force_defaults
         " These values range between -50 and 50
         let g:capesky_profiles = [
-                    \[  5, -30, -15, -30],
-                    \[  5, -28, -12, -20],
-                    \[  5, -25,  -5, -15],
+                    \[  5,  00, -30, -50],
+                    \[  5, -15, -20, -30],
+                    \[  5, -12, -12, -17],
+                    \[  5, -13,  -5, -15],
                     \[  5, -15,  -8,  -8],
                     \[  5,  -8,   0,  -5],
                     \[  0,   0,   0,   0],
-                    \[ 10, +10, +10, +10],
+                    \[  0, +10, +10, +10],
                     \]
     endif
     if !exists('g:capesky_index') || force_defaults
-        let g:capesky_index = get(g:, 'capesky_index', 4)
+        let g:capesky_index = get(g:, 'capesky_index', 5)
         let g:capesky_index = capesky#utils#clamp(
                     \g:capesky_index,
                     \0,
@@ -110,7 +111,7 @@ endfunction
 
 function! capesky#applyProfile(hue, saturation, lightness, contrast, ...)
     " a:4 = print_idx = optional index
-    let profile_str = a:0 > 3 ? " (profile ".a:4.")" : ""
+    let profile_str = a:0 > 0 ? " (profile ".a:1.")" : ""
     let hue        = capesky#utils#clamp(a:hue,        -50, +50)
     let saturation = capesky#utils#clamp(a:saturation, -50, +50)
     let lightness  = capesky#utils#clamp(a:lightness,  -50, +50)
