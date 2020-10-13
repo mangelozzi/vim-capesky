@@ -120,7 +120,7 @@ return {
     \'_statusfade3_bg'  : '#00F100',
     \'_statusfile_fg'   : '#000000',
     \'_statusfile_bg'   : '#00FF00',
-    \'_statussubtle_fg' : '#007700',
+    \'_statussubtle_fg' : '#005500',
     \'_statussubtle_bg' : '#00A000',
     \
     \'statuslinenc_fg'      : '#000000',
@@ -136,8 +136,8 @@ return {
     \'_statussubtlenc_fg'   : '#707070',
     \'_statussubtlenc_bg'   : '#a0a0a0',
     \
-    \'_qfstatusline_fg'     : '#000000',
     \'_qfstatusline_bg'     : '#c0c000',
+    \'_qfstatusline_fg'     : '#000000',
     \'_qfstatusfade1_fg'    : '#c8c800',
     \'_qfstatusfade1_bg'    : '#d0d000',
     \'_qfstatusfade2_fg'    : '#d8d800',
@@ -148,8 +148,8 @@ return {
     \'_qfstatusfile_bg'     : '#ffff00',
     \'_qfstatuslinenc_fg'   : '#ffff00',
     \'_qfstatuslinenc_bg'   : '#777700',
-    \'_qfstatussublte_fg'   : '#007700',
-    \'_qfstatussublte_bg'   : '#00a000',
+    \'_qfstatussubtle_fg'   : '#909000',
+    \'_qfstatussubtle_bg'   : '#c0c000',
     \
     \'_helpstatusline_fg'   : '#000000',
     \'_helpstatusline_bg'   : '#a000e0',

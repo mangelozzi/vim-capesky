@@ -1,4 +1,5 @@
 " {{{1 TITLE
+" Note bghh = bg higher higher
 " See a descriptive list of highlight groups with:
 "       :help highlight-groups
 "
@@ -268,6 +269,8 @@ call capesky#hi('Whitespace', 'whitespace')
 "  WildMenu     current match in 'wildmenu' completion
 call capesky#hi('WildMenu', 'black', 'wildmenu')
 
+" {{{1 NEOVIM GROUPS
+call capesky#hi('NormalFloat', 'special_bg', 'specialh')
 
 " {{{1 SYNTAX GROUPS (:h group-name)
 " :help group-name shows the colors and describes the following groups. coding styles
@@ -797,6 +800,11 @@ call capesky#hi('cssProp', 'nb2')
 " cssUnicodeRange xxx links to Constant
 " cssPagingProp  xxx cleared
 
+hi! link sassClass cssClassName
+hi! link sassClassChar sassClass
+hi! link sassMixinName sassClass
+hi! link sassPlaceholder sassMixinName
+
 " {{{1 PYTHON
 " pythonAsync    xxx links to Statement
 " pythonAttribute xxx cleared
@@ -1101,13 +1109,13 @@ call capesky#hi('_StatusFadeNC3',    '_statusfadenc3_fg',    '_statusfadenc3_bg'
 call capesky#hi('_StatusFileNC',     '_statusfilenc_fg',     '_statusfilenc_bg', 'bold')
 call capesky#hi('_StatusSubtleNC',   '_statussubtlenc_fg',   '_statussubtlenc_bg')
 
-call capesky#hi('_qfStatusLine',     ' _qfstatusline_fg',    '_qfstatusline_bg')
+call capesky#hi('_qfStatusLine',     '_qfstatusline_fg',     '_qfstatusline_bg')
 call capesky#hi('_qfStatusFade1',    '_qfstatusfade1_fg',    '_qfstatusfade1_bg')
 call capesky#hi('_qfStatusFade2',    '_qfstatusfade2_fg',    '_qfstatusfade2_bg')
 call capesky#hi('_qfStatusFade3',    '_qfstatusfade3_fg',    '_qfstatusfade3_bg')
 call capesky#hi('_qfStatusFile',     '_qfstatusfile_fg',     '_qfstatusfile_bg', 'bold')
 call capesky#hi('_qfStatusLineNC',   '_qfstatuslinenc_fg',   '_qfstatuslinenc_bg')
-call capesky#hi('_qfStatusSublte',   '_qfstatussublte_fg',   '_qfstatussublte_bg')
+call capesky#hi('_qfStatusSubtle',   '_qfstatussubtle_fg',   '_qfstatussubtle_bg')
 
 call capesky#hi('_helpStatusLine',   '_helpstatusline_fg',   '_helpstatusline_bg')
 call capesky#hi('_helpStatusFade1',  '_helpstatusfade1_fg',  '_helpstatusfade1_bg')
