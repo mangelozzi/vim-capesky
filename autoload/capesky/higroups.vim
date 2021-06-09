@@ -1157,18 +1157,50 @@ hi! link DiffRemoved DiffDelete
 
 " {{{1 MARKDOWN
 " Set HTML then set here
-"hi markdownHeadingDelimiter guifg=#00E000 guibg=NONE guisp=NONE gui=bold
-"hi markdownH1           guifg=#00ff00 guibg=NONE guisp=NONE gui=bold,underline
-"hi markdownH2           guifg=#00e000 guibg=NONE guisp=NONE gui=bold
-"hi markdownH3           guifg=#00d000 guibg=NONE guisp=NONE gui=bold
-"hi markdownH4           guifg=#00c000 guibg=NONE guisp=NONE gui=bold
+hi markdownHeadingDelimiter guifg=#008000 guibg=NONE guisp=NONE gui=bold
+hi markdownH1           guifg=#0fff00 guibg=NONE guisp=NONE gui=bold,underline
+hi markdownH2           guifg=#00e000 guibg=NONE guisp=NONE gui=bold,underline
+hi markdownH3           guifg=#00d000 guibg=NONE guisp=NONE gui=underline
+hi markdownH4           guifg=#00c000 guibg=NONE guisp=NONE gui=underline
 "hi markdownH5           guifg=#00b000 guibg=NONE guisp=NONE gui=bold
 "hi markdownH6           guifg=#00a000 guibg=NONE guisp=NONE gui=bold
 "hi markdownListMarker   guifg=#ffff00 guibg=NONE guisp=NONE gui=bold
 "hi markdownOrderedMarker guifg=#ffff00 guibg=NONE guisp=NONE gui=bold
-""hi markdownCodeBlock    guifg=#ff0000 guibg=NONE guisp=NONE gui=NONE
 "hi markdownBlockquote   guifg=#ffff00 guibg=NONE guisp=NONE gui=NONE
-"hi markdownCode         guifg=#d0f0d0 guibg=#505050 guisp=NONE gui=NONE
+hi markdownCodeBlock    guifg=#ffff90 guibg=NONE guisp=NONE gui=BOLD
+hi markdownCode         guifg=#ffff90 guibg=NONE guisp=NONE gui=BOLD
+hi markdownUrl          guifg=#a0c0ff guibg=NONE guisp=NONE gui=underline
+hi markdownUrlDelimiter  guifg=#6090c0 guibg=NONE guisp=NONE gui=none
+hi markdownUrlTitle          guifg=#a0c0ff guibg=NONE guisp=NONE gui=underline
+hi markdownUrlTitleDelimiter  guifg=#6090c0 guibg=NONE guisp=NONE gui=none
+" markdownValid  xxx cleared
+" markdownLineStart xxx cleared
+" markdownBlockquote xxx links to Comment
+" markdownListMarker xxx links to htmlTagName
+" markdownOrderedListMarker xxx links to markdownListMarker
+" markdownRule   xxx links to PreProc
+" markdownLineBreak xxx cleared
+" markdownLinkText xxx links to htmlLink
+" markdownItalic xxx links to htmlItalic
+" markdownBold   xxx links to htmlBold
+" markdownEscape xxx links to Special
+" markdownError  xxx links to Error
+" markdownHeadingRule xxx links to markdownRule
+" markdownAutomaticLink xxx links to markdownUrl
+" markdownHeadingDelimiter xxx gui=bold guifg=#008000
+" markdownLinkDelimiter xxx cleared
+" markdownIdDeclaration xxx links to Typedef
+" markdownLinkTextDelimiter xxx cleared
+" markdownLink   xxx cleared
+" markdownId     xxx links to Type
+" markdownIdDelimiter xxx links to markdownLinkDelimiter
+" markdownItalicDelimiter xxx links to markdownItalic
+" markdownBoldDelimiter xxx links to markdownBold
+" markdownBoldItalicDelimiter xxx links to markdownBoldItalic
+" markdownBoldItalic xxx links to htmlBoldItalic
+" markdownCodeDelimiter xxx links to Delimiter
+" markdownFootnote xxx links to Typedef
+" markdownFootnoteDefinition xxx links to Typedef
 
 " {{{1 LSP
 hi LspDiagnosticsError                      guifg=#ffffff guibg=#ff0000 gui=NONE
@@ -1193,3 +1225,6 @@ hi LspReferenceWrite                        guifg=#0000ff guibg=#888888 gui=NONE
 
 " {{{1 NERDTree
 hi NERDTreeExecFile guibg=bg
+
+" {{{1 Vim-Brightest
+hi _VimBrightest guibg=#500050
