@@ -95,6 +95,86 @@ augroup END
 "  Directory    directory names (and other special names in listings)
 call capesky#hi('Directory', 'directory')
 
+call capesky#hi('NvimTreeFolderIcon', 'directory_closed')
+call capesky#hi('NvimTreeOpenedFolderIcon', 'directory_open')
+call capesky#hi('NvimTreeClosedFolderIcon', 'directory_closed')
+
+call capesky#hi('NvimTreeFolderName', 'directory_closed')
+call capesky#hi('NvimTreeEmptyFolderName', 'directory_empty')
+call capesky#hi('NvimTreeOpenedFolderName', 'directory_open')
+call capesky#hi('NvimTreeClosedFolderName', 'directory_closed')
+call capesky#hi('RootFolder', 'directory_root')
+
+
+" NvimTreeOpenedFile xxx ctermfg=101 guifg=#7f9341
+" NvimTreeFileIcon xxx cleared
+" NvimTreeOpenedFile xxx ctermfg=101 guifg=#7f9341
+" EmptyFolderName xxx ctermfg=244 guifg=#808080
+
+" NvimTreeNormal = { fg = c.fg_sidebar, bg = c.bg_sidebar },
+" NvimTreeRootFolder = { fg = c.blue, style = "bold" },
+" NvimTreeGitDirty = { fg = c.git.change },
+" NvimTreeGitNew = { fg = c.git.add },
+" NvimTreeGitDeleted = { fg = c.git.delete },
+" NvimTreeSpecialFile = { fg = c.purple, style = "underline" },
+" LspDiagnosticsError = { fg = c.error },
+" LspDiagnosticsWarning = { fg = c.warning },
+" LspDiagnosticsInformation = { fg = c.info },
+" LspDiagnosticsHint = { fg = c.hint },
+" NvimTreeIndentMarker = { fg = c.fg_gutter },
+" NvimTreeImageFile = { fg = c.fg_sidebar },
+" NvimTreeSymlink = { fg = c.blue },
+
+" NvimTreeClosedFolderIcon xxx links to NvimTreeFolderIcon
+" NvimTreeEmptyFolderName xxx links to Directory
+" NvimTreeFolderIcon xxx guifg=#8094b4
+" NvimTreeFolderName xxx links to Directory
+" NvimTreeOpenedFolderIcon xxx links to NvimTreeFolderIcon
+" NvimTreeRootFolder xxx guifg=#d096ae
+" NvimTreeOpenedFolderName xxx links to Directory
+
+" NvimTreeBookmark xxx guifg=#4fe62d
+" NvimTreeIndentMarker xxx guifg=#8094b4
+" NvimTreeSymlink xxx gui=bold guifg=#b6e519
+" NvimTreeExecFile xxx gui=bold guifg=#4fe62d
+" NvimTreeSpecialFile xxx gui=bold,underline guifg=#ea87b0
+" NvimTreeImageFile xxx gui=bold guifg=#d096ae
+" NvimTreeModifiedFile xxx guifg=#4fe62d
+" NvimTreeGitDirty xxx guifg=#8cbe17
+" NvimTreeGitDeleted xxx guifg=#8cbe17
+" NvimTreeGitStaged xxx guifg=#4fe62d
+" NvimTreeGitMerge xxx guifg=#17be49
+" NvimTreeGitRenamed xxx guifg=#d096ae
+" NvimTreeGitNew xxx guifg=#ea87b0
+" NvimTreeWindowPicker xxx gui=bold guifg=#ededed guibg=#4493c8
+" NvimTreeLiveFilterPrefix xxx gui=bold guifg=#d096ae
+" NvimTreeLiveFilterValue xxx gui=bold
+" NvimTreeNormalNC xxx links to NvimTreeNormal
+" NvimTreeNormal xxx links to Normal
+" NvimTreeEndOfBuffer xxx links to EndOfBuffer
+" NvimTreeCursorLineNr xxx links to CursorLineNr
+" NvimTreeLineNr xxx links to LineNr
+" NvimTreeCursorLine xxx links to CursorLine
+" NvimTreeWinSeparator xxx links to WinSeparator
+" NvimTreeCursorColumn xxx links to CursorColumn
+" NvimTreeFileDirty xxx links to NvimTreeGitDirty
+" NvimTreeFileNew xxx links to NvimTreeGitNew
+" NvimTreeFileRenamed xxx links to NvimTreeGitRenamed
+" NvimTreeFileMerge xxx links to NvimTreeGitMerge
+" NvimTreeFileStaged xxx links to NvimTreeGitStaged
+" NvimTreeFileDeleted xxx links to NvimTreeGitDeleted
+" NvimTreeFileIgnored xxx links to NvimTreeGitIgnored
+" NvimTreeGitIgnored xxx links to Comment
+" NvimTreePopup  xxx links to Normal
+" NvimTreeStatusLine xxx links to StatusLine
+" NvimTreeStatusLineNC xxx links to StatusLineNC
+" NvimTreeSignColumn xxx links to NvimTreeNormal
+" NvimTreeLspDiagnosticsError xxx links to DiagnosticError
+" NvimTreeLspDiagnosticsWarning xxx links to DiagnosticWarn
+" NvimTreeLspDiagnosticsInformation xxx links to DiagnosticInfo
+" NvimTreeLspDiagnosticsHint xxx links to DiagnosticHint
+"
+
 "  DiffAdd      diff mode: Added line |diff.txt|
 call capesky#hi('DiffAdd', 'diffadd_fg', 'diffadd_bg')
 
