@@ -168,6 +168,6 @@ return {
     \'_helpstatuslinenc_fg' : '#ff00ff',
     \'_helpstatuslinenc_bg' : '#770077',
     \'_helpstatussublte_fg' : '#000077',
-    \'_helpstatussublte_bg' : '#0000a0',
+    \'_helpstatussublte_bg' : '#a000e0',
     \}
 endfunction

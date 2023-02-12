@@ -1137,7 +1137,9 @@ call capesky#hi('jsClassDefinition', 'main2')
 call capesky#hi('jsonBraces', 'alth')
 
 " {{{1 FZF
-let $FZF_DEFAULT_OPTS=' --color fg:#D8DEE9,bg:#2E3440,hl:#40a000,fg+:#D8DEE9,bg+:#434C5E,hl+:#60d000,pointer:#fF616A,info:#4C566A,spinner:#4C566A,header:#4C566A,prompt:#81A1C1,marker:#EBCB8B'
+" done in after/plugin/fzf-lua.lua
+" let $FZF_DEFAULT_OPTS=' --color fg:#D8DEE9,bg:#2E3440,hl:#40a000,fg+:#D8DEE9,bg+:#434C5E,hl+:#60d000,pointer:#fF616A,info:#4C566A,spinner:#4C566A,header:#4C566A,prompt:#81A1C1,marker:#EBCB8B'
+
 
 " {{{1 Custom Groups
 
@@ -1183,11 +1185,11 @@ call capesky#hi('_StatusFile',       '_statusfile_fg' ,      '_statusfile_bg', '
 call capesky#hi('_StatusSubtle',     '_statussubtle_fg',     '_statussubtle_bg')
 
 call capesky#hi('StatusLineNC',      'statuslinenc_fg',      'statuslinenc_bg', 'none') " WARNING! By default gui set to reverse, need to overide it with none
-call capesky#hi('_StatusFadeNC1',    '_statusfadenc1_fg',    '_statusfadenc1_bg')
-call capesky#hi('_StatusFadeNC2',    '_statusfadenc2_fg',    '_statusfadenc2_bg')
-call capesky#hi('_StatusFadeNC3',    '_statusfadenc3_fg',    '_statusfadenc3_bg')
-call capesky#hi('_StatusFileNC',     '_statusfilenc_fg',     '_statusfilenc_bg', 'bold')
-call capesky#hi('_StatusSubtleNC',   '_statussubtlenc_fg',   '_statussubtlenc_bg')
+call capesky#hi('_blurStatusFade1',    '_statusfadenc1_fg',    '_statusfadenc1_bg')
+call capesky#hi('_blurStatusFade2',    '_statusfadenc2_fg',    '_statusfadenc2_bg')
+call capesky#hi('_blurStatusFade3',    '_statusfadenc3_fg',    '_statusfadenc3_bg')
+call capesky#hi('_blurStatusFile',     '_statusfilenc_fg',     '_statusfilenc_bg', 'bold')
+call capesky#hi('_blurStatusSubtle',   '_statussubtlenc_fg',   '_statussubtlenc_bg')
 
 call capesky#hi('_qfStatusLine',     '_qfstatusline_fg',     '_qfstatusline_bg')
 call capesky#hi('_qfStatusFade1',    '_qfstatusfade1_fg',    '_qfstatusfade1_bg')
@@ -1203,7 +1205,7 @@ call capesky#hi('_helpStatusFade2',  '_helpstatusfade2_fg',  '_helpstatusfade2_b
 call capesky#hi('_helpStatusFade3',  '_helpstatusfade3_fg',  '_helpstatusfade3_bg')
 call capesky#hi('_helpStatusFile',   '_helpstatusfile_fg',   '_helpstatusfile_bg', 'bold')
 call capesky#hi('_helpStatusLineNC', '_helpstatuslinenc_fg', '_helpstatuslinenc_bg')
-call capesky#hi('_helpStatusSublte', '_helpstatussublte_fg', '_helpstatussublte_bg')
+call capesky#hi('_helpStatusSubtle', '_helpstatussublte_fg', '_helpstatussublte_bg')
 
 " {{{1 DIFFs (GIT)
 " This might be for vim diff, notice DiffAdd vs DiffAdded
