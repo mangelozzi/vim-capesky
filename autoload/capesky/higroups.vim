@@ -1183,6 +1183,7 @@ call capesky#hi('_StatusFade2',      '_statusfade2_fg',      '_statusfade2_bg')
 call capesky#hi('_StatusFade3',      '_statusfade3_fg',      '_statusfade3_bg')
 call capesky#hi('_StatusFile',       '_statusfile_fg' ,      '_statusfile_bg', 'bold')
 call capesky#hi('_StatusSubtle',     '_statussubtle_fg',     '_statussubtle_bg')
+call capesky#hi('_StatusImpact',     '_statusimpact_fg',     'statusline_bg', 'bold')
 
 call capesky#hi('StatusLineNC',      'statuslinenc_fg',      'statuslinenc_bg', 'none') " WARNING! By default gui set to reverse, need to overide it with none
 call capesky#hi('_blurStatusFade1',    '_statusfadenc1_fg',    '_statusfadenc1_bg')
@@ -1190,6 +1191,7 @@ call capesky#hi('_blurStatusFade2',    '_statusfadenc2_fg',    '_statusfadenc2_b
 call capesky#hi('_blurStatusFade3',    '_statusfadenc3_fg',    '_statusfadenc3_bg')
 call capesky#hi('_blurStatusFile',     '_statusfilenc_fg',     '_statusfilenc_bg', 'bold')
 call capesky#hi('_blurStatusSubtle',   '_statussubtlenc_fg',   '_statussubtlenc_bg')
+call capesky#hi('_blurStatusImpact',   '_statussubtlenc_fg',     '_statussubtlenc_bg')
 
 call capesky#hi('_qfStatusLine',     '_qfstatusline_fg',     '_qfstatusline_bg')
 call capesky#hi('_qfStatusFade1',    '_qfstatusfade1_fg',    '_qfstatusfade1_bg')
@@ -1198,6 +1200,7 @@ call capesky#hi('_qfStatusFade3',    '_qfstatusfade3_fg',    '_qfstatusfade3_bg'
 call capesky#hi('_qfStatusFile',     '_qfstatusfile_fg',     '_qfstatusfile_bg', 'bold')
 call capesky#hi('_qfStatusLineNC',   '_qfstatuslinenc_fg',   '_qfstatuslinenc_bg')
 call capesky#hi('_qfStatusSubtle',   '_qfstatussubtle_fg',   '_qfstatussubtle_bg')
+call capesky#hi('_qfStatusImpact',   '_qfstatussubtle_fg',   '_qfstatussubtle_bg')
 
 call capesky#hi('_helpStatusLine',   '_helpstatusline_fg',   '_helpstatusline_bg')
 call capesky#hi('_helpStatusFade1',  '_helpstatusfade1_fg',  '_helpstatusfade1_bg')
@@ -1206,6 +1209,7 @@ call capesky#hi('_helpStatusFade3',  '_helpstatusfade3_fg',  '_helpstatusfade3_b
 call capesky#hi('_helpStatusFile',   '_helpstatusfile_fg',   '_helpstatusfile_bg', 'bold')
 call capesky#hi('_helpStatusLineNC', '_helpstatuslinenc_fg', '_helpstatuslinenc_bg')
 call capesky#hi('_helpStatusSubtle', '_helpstatussublte_fg', '_helpstatussublte_bg')
+call capesky#hi('_helpStatusImpact', '_helpstatussublte_fg', '_helpstatussublte_bg')
 
 " {{{1 DIFFs (GIT)
 " This might be for vim diff, notice DiffAdd vs DiffAdded

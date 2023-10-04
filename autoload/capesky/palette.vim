@@ -125,6 +125,7 @@ return {
     \'_statusfile_fg'   : '#000000',
     \'_statusfile_bg'   : '#00FF00',
     \'_statussubtle_fg' : '#005500',
+    \'_statusimpact_fg' : '#ffb000',
     \'_statussubtle_bg' : '#00A000',
     \
     \'statuslinenc_fg'      : '#000000',
